@@ -4,6 +4,8 @@
 
 [![NPM](https://img.shields.io/npm/v/code-container.svg)](https://www.npmjs.com/package/react-code-container) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
+![image](.github/screenshot.png)
+
 ## Install
 
 ```bash

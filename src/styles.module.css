@@ -1,9 +1,73 @@
 /* add css module styles here (optional) */
 
-.test {
-  margin: 2em;
-  padding: 0.5em;
-  border: 2px solid #000;
-  font-size: 2em;
-  text-align: center;
+td,
+th {
+  padding: 0;
+}
+
+.container table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.header {
+  font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace!important;
+  padding: 16px;
+  /* margin: -1px -1px 0; */
+  background-color: #f6f8fa;
+  border: 1px solid #e1e4e8;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom: 0;
+  font-size: 12px !important;
+}
+
+.body {
+  padding: 0;
+  border: 1px solid #e1e4e8;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.num {
+  width: 1%;
+  min-width: 30px;
+  padding-right: 10px;
+  padding-left: 10px;
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: right;
+  white-space: nowrap;
+  vertical-align: top;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+
+.num:before {
+  content: attr(data-line-number);
+}
+
+.code {
+  position: relative;
+  padding-right: 10px;
+  padding-left: 10px;
+  line-height: 20px;
+  vertical-align: top;
+}
+
+.codeInner {
+  overflow: visible;
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  font-size: 12px;
+  word-wrap: normal;
+  white-space: pre;
+}
+
+.highlighted {
+  background-color: #fffbdd;
 }

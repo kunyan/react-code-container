@@ -9,7 +9,7 @@
   padding: 0;
 }
 
-.header {
+.container .header {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
   padding: 16px;
   /* margin: -1px -1px 0; */
@@ -21,14 +21,14 @@
   font-size: 12px !important;
 }
 
-.body {
+.container .body {
   padding: 0;
   border: 1px solid #e1e4e8;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
 }
 
-.num {
+.container .num {
   width: 1%;
   min-width: 30px;
   padding-right: 10px;
@@ -46,11 +46,11 @@
   user-select: none;
 }
 
-.num:before {
+.container .num:before {
   content: attr(data-line-number);
 }
 
-.code {
+.container .code {
   position: relative;
   padding-right: 10px;
   padding-left: 10px;
@@ -58,7 +58,7 @@
   vertical-align: top;
 }
 
-.codeInner {
+.container .codeInner {
   overflow: visible;
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
   font-size: 12px;
@@ -66,6 +66,6 @@
   white-space: pre;
 }
 
-.highlighted {
+.container .highlighted {
   background-color: #fffbdd;
 }

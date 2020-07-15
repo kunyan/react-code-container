@@ -22,7 +22,7 @@ interface Row {
 export const CodeContainer = ({
   code,
   language,
-  showLineNumber,
+  showLineNumber = true,
   selectedLines,
   onLineNumberClick,
   onUnSelect

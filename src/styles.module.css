@@ -1,13 +1,11 @@
 /* add css module styles here (optional) */
-
-td,
-th {
-  padding: 0;
-}
-
 .container table {
   border-spacing: 0;
   border-collapse: collapse;
+}
+
+.container table td, .container table th{
+  padding: 0;
 }
 
 .header {

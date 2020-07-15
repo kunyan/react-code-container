@@ -4,12 +4,13 @@
   border-collapse: collapse;
 }
 
-.container table td, .container table th{
+.container table td,
+.container table th {
   padding: 0;
 }
 
 .header {
-  font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace!important;
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
   padding: 16px;
   /* margin: -1px -1px 0; */
   background-color: #f6f8fa;
@@ -44,7 +45,6 @@
   -ms-user-select: none;
   user-select: none;
 }
-
 
 .num:before {
   content: attr(data-line-number);

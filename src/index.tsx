@@ -23,54 +23,38 @@ export const CodeContainer = ({
   code,
   language,
   showLineNumber = true,
-  selectedLines,
+  selectedLines = [],
   onLineNumberClick,
   onUnSelect
 }: Props) => {
   const [rows, setRows] = React.useState<Row[]>([])
   const lines = rows.length
 
-  const handleUnSelect = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      const newRows: Row[] = []
-      rows.forEach((row) => {
-        const newRow = { ...row }
-        if (row.isHighlight) {
-          newRow.isHighlight = false
-        }
-        newRows.push(newRow)
-      })
-      setRows(newRows)
-    }
-    onUnSelect && onUnSelect()
-  }
+  const handleUnSelect = React.useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        const newRows: Row[] = codeToRows(code, language)
+        setRows(newRows)
+        onUnSelect && onUnSelect()
+      }
+    },
+    [code, language]
+  )
 
   document.body.addEventListener('keydown', handleUnSelect)
 
   React.useEffect(() => {
-    const highlightedCodes =
-      !!language && hljs.getLanguage(language || '')
-        ? hljs.highlight(language, code).value
-        : hljs.highlightAuto(code).value
-
-    setRows(
-      highlightedCodes.split('\n').map((content, index) => ({
-        lineNumber: index + 1,
-        content,
-        isHighlight: selectedLines
-          ? !!selectedLines.find((lineNumber) => lineNumber === index + 1)
-          : false
-      }))
-    )
+    const newRows = codeToRows(code, language, selectedLines)
+    setRows(newRows)
   }, [language, code])
 
-  const getSloc = () => {
+  const getSloc = React.useCallback(() => {
     return code.split('\n').filter((line) => line.trim().length > 0).length
-  }
+  }, [code])
 
-  const getSize = () => {
+  const getSize = React.useCallback(() => {
     return prettyBytes(new Blob([code]).size)
-  }
+  }, [code])
 
   const onClickNum = (
     lineNumber: number,
@@ -134,6 +118,25 @@ export const CodeContainer = ({
       </div>
     </div>
   )
+}
+
+const codeToRows = (
+  code: string,
+  language?: string,
+  selectedLines?: number[]
+) => {
+  const highlightedCodes =
+    !!language && hljs.getLanguage(language || '')
+      ? hljs.highlight(language, code).value
+      : hljs.highlightAuto(code).value
+
+  return highlightedCodes.split('\n').map((content, index) => ({
+    lineNumber: index + 1,
+    content,
+    isHighlight: selectedLines
+      ? !!selectedLines.find((lineNumber) => lineNumber === index + 1)
+      : false
+  }))
 }
 
 export default CodeContainer

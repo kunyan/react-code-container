@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
-import CodeContainer from 'code-container'
-import 'code-container/dist/index.css'
+import CodeContainer from 'react-code-container'
+import 'react-code-container/dist/index.css'
 import 'highlight.js/styles/atom-one-dark.css'
 
 const code = `// This optional code is used to register a service worker.
@@ -169,6 +169,10 @@ const App = () => {
     console.log("clicked:", lineNumber)
     setSelectedLines(selecteds)
   }
+
+  const handleUnSelect = () => {
+    console.log('unselect lines');
+  }
   return (
     <div className='container'>
       <main>
@@ -228,6 +232,7 @@ const App = () => {
             language={language}
             onLineNumberClick={handleLineNumberClicked}
             selectedLines={selectedLines}
+            onUnSelect={handleUnSelect}
           />
         </div>
       </div>

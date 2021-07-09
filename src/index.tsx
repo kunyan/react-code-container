@@ -28,26 +28,24 @@ export const CodeContainer = React.memo(
     onLineNumberClick,
     onUnSelect
   }: Props) => {
-    const [rows, setRows] = React.useState<Row[]>([])
-    const lines = rows.length
-
-    const handleUnSelect = React.useCallback(
-      (event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
-          const newRows: Row[] = codeToRows(code, language)
-          setRows(newRows)
-          onUnSelect && onUnSelect()
-        }
-      },
-      [code, language]
-    )
-
-    document.body.addEventListener('keydown', handleUnSelect)
+    const [lines, setLines] = React.useState<number[]>([])
 
     React.useEffect(() => {
-      const newRows = codeToRows(code, language, selectedLines)
-      setRows(newRows)
-    }, [language, code])
+      if (selectedLines) {
+        setLines(selectedLines)
+      }
+    }, [selectedLines])
+
+    const handleUnSelect = React.useCallback((event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setLines([])
+        onUnSelect && onUnSelect()
+      }
+    }, [])
+
+    React.useEffect(() => {
+      document.body.addEventListener('keydown', handleUnSelect)
+    }, [])
 
     const getSloc = React.useCallback(() => {
       return code.split('\n').filter((line) => line.trim().length > 0).length
@@ -57,43 +55,30 @@ export const CodeContainer = React.memo(
       return prettyBytes(new Blob([code]).size)
     }, [code])
 
+    const rows = codeToRows(code, language, lines)
+
     const onClickNum = (
       lineNumber: number,
       event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
     ) => {
-      let newRows = []
-      const index = lineNumber - 1
       const highlightedLines = rows.filter((row) => row.isHighlight)
+      const tmpLines = []
       if (event.shiftKey) {
         const firstSelectedLine = highlightedLines[0]
         const range = firstSelectedLine.lineNumber - lineNumber
-        const selectedLines = [lineNumber]
+        tmpLines.push(lineNumber)
         let n = 0
         while (n <= Math.abs(range)) {
           const index = range > 0 ? lineNumber + n : lineNumber - n
-          selectedLines.push(rows[index - 1].lineNumber)
+          tmpLines.push(rows[index - 1].lineNumber)
           n++
         }
-
-        newRows = rows.map((row) => ({
-          ...row,
-          isHighlight: !!selectedLines.find((num) => num === row.lineNumber)
-        }))
-
-        setRows(newRows)
       } else {
-        newRows = rows.map((row) => ({
-          ...row,
-          isHighlight: false
-        }))
-        newRows[index].isHighlight = true
-        setRows(newRows)
+        tmpLines.push(lineNumber)
       }
 
-      const selectedLines = newRows
-        .filter((row) => !!row.isHighlight)
-        .map((row) => row.lineNumber)
-      onLineNumberClick && onLineNumberClick(lineNumber, selectedLines)
+      setLines(tmpLines)
+      onLineNumberClick && onLineNumberClick(lineNumber, tmpLines)
     }
 
     const renderRows = () =>
@@ -109,7 +94,7 @@ export const CodeContainer = React.memo(
       <div className={styles.container}>
         <div className={styles.header}>
           <div>
-            {lines} lines ({getSloc()} sloc) | {getSize()}
+            {rows.length} lines ({getSloc()} sloc) | {getSize()}
           </div>
         </div>
         <div className={`${styles.body} hljs`}>

@@ -8,7 +8,7 @@ interface Props {
   ) => void
 }
 
-export default ({ lineNumber, onClick }: Props) => {
+const NumberCell = ({ lineNumber, onClick }: Props) => {
   return (
     <td
       id={`L${lineNumber}`}
@@ -19,3 +19,4 @@ export default ({ lineNumber, onClick }: Props) => {
     />
   )
 }
+export default React.memo(NumberCell)

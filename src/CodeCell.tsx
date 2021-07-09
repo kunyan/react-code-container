@@ -8,7 +8,7 @@ interface Props {
   isHighlight?: boolean
 }
 
-export default ({ lineNumber, code, isHighlight }: Props) => {
+const CodeCell = ({ lineNumber, code, isHighlight }: Props) => {
   const [className, setClassName] = React.useState(
     `${styles.code} ${styles.codeInner}`
   )
@@ -29,3 +29,5 @@ export default ({ lineNumber, code, isHighlight }: Props) => {
     />
   )
 }
+
+export default React.memo(CodeCell)

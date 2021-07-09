@@ -1,8 +1,18 @@
 import * as React from 'react'
 import hljs from 'highlight.js'
 import prettyBytes from 'pretty-bytes'
+import 'react-virtualized/styles.css'
 import styles from './styles.module.css'
 import Row from './Row'
+import {
+  AutoSizer,
+  // CellMeasurer,
+  // CellMeasurerCache,
+  WindowScroller,
+  Table,
+  TableRowProps
+} from 'react-virtualized'
+// import { List  } from 'react-virtualized/dist/commonjs/List'
 
 interface Props {
   code: string
@@ -19,105 +29,123 @@ interface Row {
   isHighlight?: boolean
 }
 
-export const CodeContainer = React.memo(
-  ({
-    code,
-    language,
-    showLineNumber = true,
-    selectedLines = [],
-    onLineNumberClick,
-    onUnSelect
-  }: Props) => {
-    const [lines, setLines] = React.useState<number[]>(selectedLines || [])
+export const CodeContainer = ({
+  code,
+  language,
+  showLineNumber = true,
+  selectedLines = [],
+  onLineNumberClick,
+  onUnSelect
+}: Props) => {
+  const [lines, setLines] = React.useState<number[]>(selectedLines)
+  const [codes, setCodes] = React.useState<string[]>([])
+  const linesRef = React.useRef(lines);
 
-    const handleUnSelect = React.useCallback((event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setLines([])
-        onUnSelect && onUnSelect()
+  React.useEffect(() => {
+    if (!!language && hljs.getLanguage(language || '')) {
+      setCodes(hljs.highlight(language, code).value.split('\n'))
+    } else {
+      setCodes(hljs.highlightAuto(code).value.split('\n'))
+    }
+  }, [code, language])
+
+  const handleUnSelect = React.useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      setLines([])
+      linesRef.current = []
+      onUnSelect && onUnSelect()
+    }
+  }, [])
+
+  React.useEffect(() => {
+    document.body.addEventListener('keydown', handleUnSelect)
+    return () => {
+      document.body.removeEventListener('keydown', handleUnSelect);
+    }
+  }, [])
+
+  const getSloc = React.useCallback(() => {
+    return code.split('\n').filter((line) => line.trim().length > 0).length
+  }, [code])
+
+  const getSize = React.useCallback(() => {
+    return prettyBytes(new Blob([code]).size)
+  }, [code])
+
+  const onClickLine = (
+    lineNumber: number,
+    event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
+  ) => {
+    const tmpLines = []
+    if (event.shiftKey) {
+      const firstSelectedLine = linesRef.current[0];
+      const range = firstSelectedLine - lineNumber
+      let n = 0
+      while (n <= Math.abs(range)) {
+        const index = range > 0 ? lineNumber + n : lineNumber - n
+        tmpLines.push(index)
+        n++
       }
-    }, [])
+    }
+    tmpLines.push(lineNumber)
+    setLines(tmpLines)
+    linesRef.current = tmpLines
+    onLineNumberClick && onLineNumberClick(lineNumber, tmpLines)
+  }
 
-    React.useEffect(() => {
-      document.body.addEventListener('keydown', handleUnSelect)
-    }, [])
-
-    const getSloc = React.useCallback(() => {
-      return code.split('\n').filter((line) => line.trim().length > 0).length
-    }, [code])
-
-    const getSize = React.useCallback(() => {
-      return prettyBytes(new Blob([code]).size)
-    }, [code])
-
-    const rows = codeToRows(code, language, lines)
-
-    const onClickNum = (
-      lineNumber: number,
-      event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
-    ) => {
-      const highlightedLines = rows.filter((row) => row.isHighlight)
-      const tmpLines = []
-      if (event.shiftKey) {
-        const firstSelectedLine = highlightedLines[0]
-        const range = firstSelectedLine.lineNumber - lineNumber
-        tmpLines.push(lineNumber)
-        let n = 0
-        while (n <= Math.abs(range)) {
-          const index = range > 0 ? lineNumber + n : lineNumber - n
-          tmpLines.push(rows[index - 1].lineNumber)
-          n++
-        }
-      } else {
-        tmpLines.push(lineNumber)
-      }
-
-      setLines(tmpLines)
-      onLineNumberClick && onLineNumberClick(lineNumber, tmpLines)
+  const rowRenderer = ({ index, key, style }: TableRowProps) => {
+    const isHighlight = !!lines.find((lineNumber) => lineNumber === index + 1)
+    const row = {
+      lineNumber: index + 1,
+      content: codes[index],
+      isHighlight
     }
 
-    const renderRows = () =>
-      rows.map((row, index) => (
-        <Row
-          key={`code-container-row-${index}`}
-          row={row}
-          showLineNumber={showLineNumber}
-          onLineNumberClick={onClickNum}
-        />
-      ))
     return (
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <div>
-            {rows.length} lines ({getSloc()} sloc) | {getSize()}
-          </div>
-        </div>
-        <div className={`${styles.body} hljs`}>
-          <table>
-            <tbody>{renderRows()}</tbody>
-          </table>
-        </div>
-      </div>
+      <Row
+        key={key}
+        row={row}
+        style={style}
+        showLineNumber={showLineNumber}
+        onClick={onClickLine}
+      />
     )
   }
-)
 
-const codeToRows = (
-  code: string,
-  language?: string,
-  selectedLines?: number[]
-) => {
-  const highlightedCodes =
-    !!language && hljs.getLanguage(language || '')
-      ? hljs.highlight(language, code).value
-      : hljs.highlightAuto(code).value
-
-  return highlightedCodes.split('\n').map((content, index) => ({
-    lineNumber: index + 1,
-    content,
-    isHighlight: selectedLines
-      ? !!selectedLines.find((lineNumber) => lineNumber === index + 1)
-      : false
-  }))
+  return (
+    <WindowScroller>
+      {({ height, isScrolling, onChildScroll, scrollTop }) => (
+        <div className={styles.container}>
+          <div className={styles.header}>
+            <div>
+              {codes.length} lines ({getSloc()} sloc) | {getSize()}
+            </div>
+          </div>
+          <div className={`${styles.body} hljs`}>
+            <AutoSizer disableHeight>
+              {({ width }) => (
+                <Table
+                  width={width}
+                  height={height}
+                  gridClassName={styles.codeTable}
+                  autoHeight
+                  headerHeight={0}
+                  rowHeight={20}
+                  rowCount={codes.length}
+                  rowRenderer={rowRenderer}
+                  overscanRowCount={20}
+                  scrollTop={scrollTop}
+                  onScroll={onChildScroll}
+                  isScrolling={isScrolling}
+                  rowGetter={({ index }) => codes[index]}
+                />
+              )}
+            </AutoSizer>
+          </div>
+        </div>
+      )}
+    </WindowScroller>
+  )
 }
 
 export default CodeContainer

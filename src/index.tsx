@@ -76,18 +76,17 @@ export const CodeContainer = ({
     lineNumber: number,
     event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
   ) => {
-    const tmpLines = []
+    const tmpLines = [lineNumber]
     if (event.shiftKey) {
       const firstSelectedLine = linesRef.current[0];
       const range = firstSelectedLine - lineNumber
-      let n = 0
+      let n = 1
       while (n <= Math.abs(range)) {
         const index = range > 0 ? lineNumber + n : lineNumber - n
         tmpLines.push(index)
         n++
       }
     }
-    tmpLines.push(lineNumber)
     setLines(tmpLines)
     linesRef.current = tmpLines
     onLineNumberClick && onLineNumberClick(lineNumber, tmpLines)

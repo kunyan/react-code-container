@@ -1,6 +1,6 @@
 {
   "name": "react-code-container",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "a simple React code highlight component",
   "author": "Kun Yan <kyan@redhat.com>",
   "license": "MIT",

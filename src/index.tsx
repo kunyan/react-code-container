@@ -28,13 +28,7 @@ export const CodeContainer = React.memo(
     onLineNumberClick,
     onUnSelect
   }: Props) => {
-    const [lines, setLines] = React.useState<number[]>([])
-
-    React.useEffect(() => {
-      if (selectedLines) {
-        setLines(selectedLines)
-      }
-    }, [selectedLines])
+    const [lines, setLines] = React.useState<number[]>(selectedLines || [])
 
     const handleUnSelect = React.useCallback((event: KeyboardEvent) => {
       if (event.key === 'Escape') {

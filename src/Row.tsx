@@ -4,23 +4,25 @@ import CodeCell from './CodeCell'
 
 interface Props {
   row: any
+  style: React.CSSProperties
   showLineNumber?: boolean
-  onLineNumberClick?: (
+  onClick?: (
     lineNumber: number,
     event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
   ) => void
 }
 
-export default ({ row, showLineNumber, onLineNumberClick }: Props) => {
+const Row = ({ style, row, showLineNumber, onClick }: Props) => {
   const lineNumber = row.lineNumber
 
-  const handleClick = (
-    event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
-  ) => {
-    onLineNumberClick && onLineNumberClick(lineNumber, event)
-  }
+  const handleClick = React.useCallback(
+    (event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>) => {
+      onClick && onClick(lineNumber, event)
+    },
+    []
+  )
   return (
-    <tr>
+    <tr style={{...style, width: "100%", overflow: "initial"}}>
       {showLineNumber && (
         <NumberCell lineNumber={lineNumber} onClick={handleClick} />
       )}
@@ -33,3 +35,5 @@ export default ({ row, showLineNumber, onLineNumberClick }: Props) => {
     </tr>
   )
 }
+
+export default React.memo(Row)

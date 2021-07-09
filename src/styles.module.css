@@ -69,3 +69,7 @@
 .container .highlighted {
   background-color: #fffbdd;
 }
+
+div[role="rowgroup"][aria-label="grid"] > div[role="rowgroup"] {
+  overflow-x: auto !important;
+}

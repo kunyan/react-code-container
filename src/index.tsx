@@ -6,13 +6,10 @@ import styles from './styles.module.css'
 import Row from './Row'
 import {
   AutoSizer,
-  // CellMeasurer,
-  // CellMeasurerCache,
   WindowScroller,
   Table,
   TableRowProps
 } from 'react-virtualized'
-// import { List  } from 'react-virtualized/dist/commonjs/List'
 
 interface Props {
   code: string
@@ -39,7 +36,7 @@ export const CodeContainer = ({
 }: Props) => {
   const [lines, setLines] = React.useState<number[]>(selectedLines)
   const [codes, setCodes] = React.useState<string[]>([])
-  const linesRef = React.useRef(lines);
+  const linesRef = React.useRef(lines)
 
   React.useEffect(() => {
     if (!!language && hljs.getLanguage(language || '')) {
@@ -60,7 +57,7 @@ export const CodeContainer = ({
   React.useEffect(() => {
     document.body.addEventListener('keydown', handleUnSelect)
     return () => {
-      document.body.removeEventListener('keydown', handleUnSelect);
+      document.body.removeEventListener('keydown', handleUnSelect)
     }
   }, [])
 
@@ -78,7 +75,7 @@ export const CodeContainer = ({
   ) => {
     const tmpLines = [lineNumber]
     if (event.shiftKey) {
-      const firstSelectedLine = linesRef.current[0];
+      const firstSelectedLine = linesRef.current[0]
       const range = firstSelectedLine - lineNumber
       let n = 1
       while (n <= Math.abs(range)) {
@@ -87,9 +84,10 @@ export const CodeContainer = ({
         n++
       }
     }
-    setLines(tmpLines)
-    linesRef.current = tmpLines
-    onLineNumberClick && onLineNumberClick(lineNumber, tmpLines)
+    const sortLines = tmpLines.sort((a, b) => a - b)
+    setLines(sortLines)
+    linesRef.current = sortLines
+    onLineNumberClick && onLineNumberClick(lineNumber, sortLines)
   }
 
   const rowRenderer = ({ index, key, style }: TableRowProps) => {

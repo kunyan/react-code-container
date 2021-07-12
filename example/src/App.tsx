@@ -171,6 +171,7 @@ const App = () => {
   }
 
   const handleUnSelect = () => {
+    setSelectedLines([]);
     console.log('unselect lines');
   }
   return (

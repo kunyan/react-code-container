@@ -30,7 +30,7 @@
 
 .container .num {
   width: 1%;
-  min-width: 30px;
+  min-width: 50px;
   padding-right: 10px;
   padding-left: 10px;
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
@@ -67,7 +67,8 @@
 }
 
 .container .highlighted {
-  background-color: #fffbdd;
+  background-color: #d2992226;
+  box-shadow: inset 2px 0 0 #e3b341;
 }
 
 div[role="rowgroup"][aria-label="grid"] > div[role="rowgroup"] {

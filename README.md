@@ -15,27 +15,28 @@ npm install --save react-code-container
 ## Usage
 
 ```tsx
-import React, { useState } from 'react'
-
-import CodeContainer from 'react-code-container'
-import 'react-code-container/dist/index.css'
+import React, { useState } from 'react';
+import 'react-code-container/dist/styles/base.css';
+import 'react-virtualized/styles.css';
+import 'highlight.js/styles/atom-one-dark.css'; // Find any highlight style you need
+import ReactCodeContainer from 'react-code-container';
 
 export default () => {
-  const [language, setLanguage] = useState('jsx')
-  const [showLineNumber, setShowLineNumber] = useState(true)
+  const [language, setLanguage] = useState('jsx');
+  const [showLineNumber, setShowLineNumber] = useState(true);
 
   const code = `export function hello() => {
     console.log("Hello world")
-  }`
+  }`;
   return (
-    <CodeContainer
+    <ReactCodeContainer
       code={code}
       showLineNumber={showLineNumber} // optional
       language={language} // optional
       onLineNumberClick={handleLineNumberClicked} // optional
     />
-  )
-}
+  );
+};
 ```
 
 ## Configuration

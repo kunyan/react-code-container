@@ -1,10 +1,4 @@
-import { useState } from 'react'
-
-import CodeContainer from 'react-code-container'
-import 'react-code-container/dist/index.css'
-import 'highlight.js/styles/atom-one-dark.css'
-
-const code = `// This optional code is used to register a service worker.
+export const code = `// This optional code is used to register a service worker.
 // register() is not called by default.
 
 // This lets the app load faster on subsequent visits in production, and gives
@@ -38,7 +32,7 @@ export function register(config) {
     }
 
     window.addEventListener('load', () => {
-      const swUrl = \`${process.env.PUBLIC_URL}/service-worker.js\`;
+      const swUrl = \`/service-worker.js\`;
 
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
@@ -144,102 +138,4 @@ export function unregister() {
         console.error(error.message);
       });
   }
-}`
-
-const App = () => {
-  const [language, setLanguage] = useState('jsx')
-  const [text, setText] = useState(code)
-  const [showLineNumber, setShowLineNumber] = useState(true)
-  const [selectedLines, setSelectedLines] = useState<number[]>([4,5,6,7,8]);
-
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const content = event.currentTarget.value
-    setText(content)
-  }
-
-  const handleLanguageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLanguage(event.currentTarget.value)
-  }
-
-  const handleChangeLineNumber = () => {
-    setShowLineNumber(!showLineNumber)
-  }
-
-  const handleLineNumberClicked = (lineNumber: number, selecteds: number[]) => {
-    console.log("clicked:", lineNumber)
-    setSelectedLines(selecteds)
-  }
-
-  const handleUnSelect = () => {
-    setSelectedLines([]);
-    console.log('unselect lines');
-  }
-  return (
-    <div className='container'>
-      <main>
-        <h1>React Code Container</h1>
-      <form>
-        <div className='form-group row'>
-          <label className='col-sm-2 col-form-label'>Language</label>
-          <div className='col-sm-10'>
-            <input
-              type='text'
-              className='form-control'
-              value={language}
-              onChange={handleLanguageChange}
-            />
-          </div>
-        </div>
-        <div className='form-group row'>
-          <label className='col-sm-2 col-form-label'>Show LineNumber</label>
-          <div className='col-sm-10'>
-            <div className='form-check'>
-              <input
-                type='checkbox'
-                className='form-check-input'
-                onChange={handleChangeLineNumber}
-                checked={showLineNumber}
-                required
-              />
-              <label className='form-check-label'>
-                {showLineNumber ? 'On' : 'Off'}
-              </label>
-            </div>
-          </div>
-        </div>
-        <div className='form-group row'>
-          <label className='col-sm-2 col-form-label'>Selected Lines</label>
-          <div className='col-sm-10'>
-            {selectedLines.join(",")}
-          </div>
-        </div>
-        <div className='form-group row'>
-          <label className='col-sm-2 col-form-label'>Source Code</label>
-          <div className='col-sm-10'>
-            <textarea
-              className='form-control'
-              onChange={handleChange}
-              value={text}
-            />
-          </div>
-        </div>
-      </form>
-
-      <div className='row'>
-        <div className='col-sm'>
-          <CodeContainer
-            code={text}
-            showLineNumber={showLineNumber}
-            language={language}
-            onLineNumberClick={handleLineNumberClicked}
-            selectedLines={selectedLines}
-            onUnSelect={handleUnSelect}
-          />
-        </div>
-      </div>
-      </main>
-    </div>
-  )
-}
-
-export default App
+}`;

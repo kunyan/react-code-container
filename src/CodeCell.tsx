@@ -1,33 +1,28 @@
-import * as React from 'react'
-import classNames from 'classnames'
-import styles from './styles.module.css'
+import { clsx } from 'clsx';
+import { useEffect, useState } from 'react';
 
-interface Props {
-  lineNumber: number
-  code: string
-  isHighlight?: boolean
-}
+import { IRow } from './Row';
+import styles from './styles.module.css';
 
-const CodeCell = ({ lineNumber, code, isHighlight }: Props) => {
-  const [className, setClassName] = React.useState(
-    `${styles.code} ${styles.codeInner}`
-  )
-  React.useEffect(() => {
+export const CodeCell = ({ lineNumber, content, isHighlight }: IRow) => {
+  const [className, setClassName] = useState(`${styles.code} ${styles.inner}`);
+  useEffect(() => {
     setClassName(
-      classNames(styles.code, styles.codeInner, {
-        [styles.highlighted]: isHighlight
+      clsx(styles.code, styles.inner, {
+        [styles.highlighted]: isHighlight,
       })
-    )
-  }, [isHighlight])
+    );
+  }, [isHighlight]);
 
   return (
-    <td
+    <div
       id={`LC${lineNumber}`}
       key={`col-code-${lineNumber}`}
+      aria-label={`line: ${lineNumber}`}
       className={className}
-      dangerouslySetInnerHTML={{ __html: code }}
+      dangerouslySetInnerHTML={{ __html: content }}
     />
-  )
-}
+  );
+};
 
-export default React.memo(CodeCell)
+// export default memo(CodeCell)

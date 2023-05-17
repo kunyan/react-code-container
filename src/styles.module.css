@@ -1,17 +1,8 @@
 /* add css module styles here (optional) */
-.container table {
-  border-spacing: 0;
-  border-collapse: collapse;
-}
-
-.container table td,
-.container table th {
-  padding: 0;
-}
-
 .container .header {
-  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace !important;
+  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace !important;
   padding: 16px;
+
   /* margin: -1px -1px 0; */
   background-color: #f6f8fa;
   border: 1px solid #e1e4e8;
@@ -33,20 +24,17 @@
   min-width: 50px;
   padding-right: 10px;
   padding-left: 10px;
-  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: 12px;
   line-height: 20px;
   text-align: right;
   white-space: nowrap;
   vertical-align: top;
   cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
-.container .num:before {
+.container .num::before {
   content: attr(data-line-number);
 }
 
@@ -56,11 +44,12 @@
   padding-left: 10px;
   line-height: 20px;
   vertical-align: top;
+  flex-grow: 1;
 }
 
-.container .codeInner {
+.container .inner {
   overflow: visible;
-  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: 12px;
   word-wrap: normal;
   white-space: pre;
@@ -71,6 +60,6 @@
   box-shadow: inset 2px 0 0 #e3b341;
 }
 
-div[role="rowgroup"][aria-label="grid"] > div[role="rowgroup"] {
+div[role='rowgroup'][aria-label='grid'] > div[role='rowgroup'] {
   overflow-x: auto !important;
 }

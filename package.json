@@ -38,8 +38,8 @@
     "react-virtualized": "9.22.5"
   },
   "devDependencies": {
-    "@commitlint/cli": "17.6.3",
-    "@commitlint/config-conventional": "17.6.3",
+    "@commitlint/cli": "17.6.5",
+    "@commitlint/config-conventional": "17.6.5",
     "@storybook/addon-essentials": "7.0.12",
     "@storybook/addon-interactions": "7.0.12",
     "@storybook/addon-links": "7.0.12",

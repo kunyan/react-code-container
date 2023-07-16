@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "highlight.js": "11.8.0",
-    "pretty-bytes": "6.1.0",
+    "pretty-bytes": "6.1.1",
     "react-virtualized": "9.22.5"
   },
   "devDependencies": {

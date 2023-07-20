@@ -64,7 +64,7 @@
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-react-refresh": "0.4.3",
     "eslint-plugin-simple-import-sort": "10.0.0",
-    "eslint-plugin-storybook": "0.6.12",
+    "eslint-plugin-storybook": "0.6.13",
     "gh-pages": "5.0.0",
     "husky": "8.0.3",
     "lint-staged": "13.2.3",

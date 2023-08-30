@@ -1,7 +1,5 @@
 # react-code-container
 
-> Made with create-react-library
-
 [![NPM](https://img.shields.io/npm/v/react-code-container.svg)](https://www.npmjs.com/package/react-code-container) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ![image](.github/screenshot.png)
@@ -17,7 +15,6 @@ npm install --save react-code-container
 ```tsx
 import React, { useState } from 'react';
 import 'react-code-container/dist/styles/base.css';
-import 'react-virtualized/styles.css';
 import 'highlight.js/styles/atom-one-dark.css'; // Find any highlight style you need
 import ReactCodeContainer from 'react-code-container';
 

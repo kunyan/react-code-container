@@ -1,5 +1,6 @@
-import { clsx } from 'clsx';
 import { useEffect, useState } from 'react';
+
+import { clsx } from 'clsx';
 
 import { IRow } from './Row';
 import styles from './styles.module.css';
@@ -10,7 +11,7 @@ export const CodeCell = ({ lineNumber, content, isHighlight }: IRow) => {
     setClassName(
       clsx(styles.code, styles.inner, {
         [styles.highlighted]: isHighlight,
-      })
+      }),
     );
   }, [isHighlight]);
 
@@ -24,5 +25,3 @@ export const CodeCell = ({ lineNumber, content, isHighlight }: IRow) => {
     />
   );
 };
-
-// export default memo(CodeCell)

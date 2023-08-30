@@ -1,0 +1,11 @@
+{
+  "docker.composeCommand": "podman-compose",
+  "editor.wordWrap": "wordWrapColumn",
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
+}

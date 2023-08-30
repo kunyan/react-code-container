@@ -11,11 +11,11 @@ export interface IRow {
 
 interface Props {
   row: IRow;
-  style: React.CSSProperties;
+  style?: React.CSSProperties;
   showLineNumber?: boolean;
   onClick?: (
     lineNumber: number,
-    event: React.MouseEvent<HTMLTableCellElement, MouseEvent>
+    event: React.MouseEvent<HTMLTableCellElement, MouseEvent>,
   ) => void;
 }
 
@@ -26,7 +26,7 @@ export const Row = ({ style, row, showLineNumber, onClick }: Props) => {
     (event: React.MouseEvent<HTMLTableCellElement, MouseEvent>) => {
       onClick && onClick(lineNumber, event);
     },
-    [lineNumber, onClick]
+    [lineNumber, onClick],
   );
   return (
     <div

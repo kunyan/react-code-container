@@ -1,15 +1,8 @@
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
+import { VirtualItem, useVirtualizer } from '@tanstack/react-virtual';
 import hljs from 'highlight.js';
 import prettyBytes from 'pretty-bytes';
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import {
-  AutoSizer as _AutoSizer,
-  AutoSizerProps,
-  List as _List,
-  ListProps,
-  ListRowProps,
-  WindowScroller as _WindowScroller,
-  WindowScrollerProps,
-} from 'react-virtualized';
 
 import { Row } from './Row';
 import styles from './styles.module.css';
@@ -29,10 +22,6 @@ interface Row {
   isHighlight?: boolean;
 }
 
-const AutoSizer = _AutoSizer as unknown as FC<AutoSizerProps>;
-const WindowScroller = _WindowScroller as unknown as FC<WindowScrollerProps>;
-const List = _List as unknown as FC<ListProps>;
-
 export const ReactCodeContainer = ({
   code,
   language,
@@ -43,6 +32,8 @@ export const ReactCodeContainer = ({
 }: IProps) => {
   const [lines, setLines] = useState<number[]>(selectedLines);
   const [codes, setCodes] = useState<string[]>([]);
+  const parentRef = React.useRef<HTMLDivElement>(null);
+
   const linesRef = useRef(lines);
 
   useEffect(() => {
@@ -61,7 +52,7 @@ export const ReactCodeContainer = ({
         onUnSelect && onUnSelect();
       }
     },
-    [onUnSelect]
+    [onUnSelect],
   );
 
   useEffect(() => {
@@ -70,6 +61,13 @@ export const ReactCodeContainer = ({
       document.body.removeEventListener('keydown', handleUnSelect);
     };
   }, [handleUnSelect]);
+
+  const virtualizer = useVirtualizer({
+    count: codes.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 20,
+    overscan: 20,
+  });
 
   const getSloc = useCallback(() => {
     return code.split('\n').filter((line) => line.trim().length > 0).length;
@@ -81,7 +79,7 @@ export const ReactCodeContainer = ({
 
   const onClickLine = (
     lineNumber: number,
-    event: React.MouseEvent<HTMLTableCellElement, MouseEvent>
+    event: React.MouseEvent<HTMLTableCellElement, MouseEvent>,
   ) => {
     const tmpLines = [lineNumber];
     if (event.shiftKey) {
@@ -100,7 +98,7 @@ export const ReactCodeContainer = ({
     onLineNumberClick && onLineNumberClick(lineNumber, sortLines);
   };
 
-  const rowRenderer = ({ index, key, style }: ListRowProps) => {
+  const rowRenderer = ({ index, key }: VirtualItem) => {
     const isHighlight = !!lines.find((lineNumber) => lineNumber === index + 1);
     const row = {
       lineNumber: index + 1,
@@ -112,7 +110,6 @@ export const ReactCodeContainer = ({
       <Row
         key={key}
         row={row}
-        style={style}
         showLineNumber={showLineNumber}
         onClick={onClickLine}
       />
@@ -120,40 +117,27 @@ export const ReactCodeContainer = ({
   };
 
   return (
-    <WindowScroller>
-      {({ height, isScrolling, onChildScroll, registerChild, scrollTop }) => (
-        <div className={styles.container}>
-          <div className={styles.header}>
-            <div>
-              {codes.length} lines ({getSloc()} sloc) | {getSize()}
-            </div>
-          </div>
-          <div
-            className={`${styles.body} hljs`}
-            ref={registerChild as React.LegacyRef<HTMLDivElement>}
-          >
-            <AutoSizer disableHeight>
-              {({ width }) => (
-                <List
-                  width={width}
-                  height={height}
-                  gridClassName={styles.codeTable}
-                  autoHeight
-                  headerHeight={0}
-                  rowHeight={20}
-                  rowCount={codes.length}
-                  rowRenderer={rowRenderer}
-                  overscanRowCount={20}
-                  scrollTop={scrollTop}
-                  onScroll={onChildScroll}
-                  isScrolling={isScrolling}
-                />
-              )}
-            </AutoSizer>
-          </div>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div>
+          {codes.length} lines ({getSloc()} sloc) | {getSize()}
         </div>
-      )}
-    </WindowScroller>
+      </div>
+      <div ref={parentRef} className={`${styles.body} hljs`}>
+        {/* The large inner element to hold all of the items */}
+        <div
+          style={{
+            height: `${virtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative',
+          }}
+        >
+          {virtualizer
+            .getVirtualItems()
+            .map((virtualItem) => rowRenderer(virtualItem))}
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -34,7 +34,7 @@
     "react-dom": ">=18.x"
   },
   "dependencies": {
-    "@tanstack/react-virtual": "3.0.0-beta.66",
+    "@tanstack/react-virtual": "3.0.0-beta.68",
     "clsx": "2.0.0",
     "highlight.js": "11.9.0",
     "pretty-bytes": "6.1.1"

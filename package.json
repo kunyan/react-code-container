@@ -36,7 +36,7 @@
   "dependencies": {
     "@tanstack/react-virtual": "3.11.2",
     "clsx": "2.1.1",
-    "highlight.js": "11.10.0",
+    "highlight.js": "11.11.1",
     "pretty-bytes": "6.1.1"
   },
   "devDependencies": {
